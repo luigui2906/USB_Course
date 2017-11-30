@@ -1,8 +1,3 @@
-# Luis Roldao - Universidad Simon Bolivar
-# 30-Nov-2017
-# In order to create the environment for running this code, remember to run the
-# following command in your Anaconda command line:
-# --> conda create --name 3dclass --channel ccordoba12 python=2.7 pcl python-pcl numpy matplotlib mayavi
 
 import pcl
 from mayavi import mlab
