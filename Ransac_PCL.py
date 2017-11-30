@@ -11,8 +11,33 @@ import time
 
 
 def read_pcd_file(input_filename):
-    # Returns the pointcloud as a numpy array
     return pcl.load(input_filename).to_array()
+
+
+def write_pointcloud_file(pointcloud, output_path):
+    output_pointcloud = pcl.PointCloud()
+    output_pointcloud.from_array(pointcloud)
+    output_pointcloud.to_file(output_path)
+    return
+
+
+def viewer_pointcloud(pointcloud):
+    mlab.figure(bgcolor=(1, 1, 1))
+    mlab.points3d(pointcloud[:, 0], pointcloud[:, 1], pointcloud[:, 2], color=(0, 0, 0), mode='point')
+    mlab.show()
+    return
+
+
+def viewer_original_vs_ransac_pointcloud_vs_plane(ransac_pcl, original_pcl, plane_model):
+    sensor_range = 120.0
+    mlab.figure(bgcolor=(1, 1, 1))
+    x, y = np.ogrid[-sensor_range:sensor_range:1, -sensor_range:sensor_range:1]
+    mlab.points3d(original_pcl[:, 0], original_pcl[:, 1], original_pcl[:, 2], color=(0, 0, 0), mode='point')
+    mlab.points3d(ransac_pcl[:, 0], ransac_pcl[:, 1], ransac_pcl[:, 2], color=(1, 0, 0), mode='point')
+    mlab.surf(x, y, (-plane_model[3] - (plane_model[0]*x) - (plane_model[1]*y)) / plane_model[2],
+              color=(0.8, 0.8, 1), opacity=0.3)
+    mlab.show()
+    return
 
 
 def random_sampling_consensus(pointcloud, numb_iterations, threshold):
@@ -70,39 +95,8 @@ def random_sampling_consensus(pointcloud, numb_iterations, threshold):
     return ransac_pointcloud, plane_model
 
 
-def write_pointcloud_file(pointcloud, output_path):
-    # This function receives a numpy array with the pointcloud and save it as a .pcd file
-    output_pointcloud = pcl.PointCloud()
-    output_pointcloud.from_array(pointcloud)
-    output_pointcloud.to_file(output_path)
-    return
-
-
-def viewer_pointcloud(pointcloud):
-    mlab.figure(bgcolor=(1, 1, 1))
-    mlab.points3d(pointcloud[:, 0], pointcloud[:, 1], pointcloud[:, 2], color=(0, 0, 0), mode='point')
-    mlab.show()
-    return
-
-
-def viewer_original_vs_ransac_pointcloud_vs_plane(ransac_pcl, original_pcl, plane_model):
-    sensor_range = 120.0
-    mlab.figure(bgcolor=(1, 1, 1))
-    x, y = np.ogrid[-sensor_range:sensor_range:1, -sensor_range:sensor_range:1]
-    mlab.points3d(original_pcl[:, 0], original_pcl[:, 1], original_pcl[:, 2], color=(0, 0, 0), mode='point')
-    mlab.points3d(ransac_pcl[:, 0], ransac_pcl[:, 1], ransac_pcl[:, 2], color=(1, 0, 0), mode='point')
-    mlab.surf(x, y, plane_function(plane_model[0], plane_model[1], plane_model[2], plane_model[3], x, y),
-              color=(0.8, 0.8, 1), opacity=0.3)
-    mlab.show()
-    return
-
-
-def plane_function(ransac_a, ransac_b, ransac_c, ransac_d, x, y):
-    return (-ransac_d - (ransac_a*x) - (ransac_b*y)) / ransac_c
-
-
 def main():
-    pointcloud = read_pcd_file('C:/Users/lroldaoj/Documents/PycharmProjects/Ransac_PCL/pointcloud_example.pcd')
+    pointcloud = read_pcd_file('D:/Documents/PycharmProjects/Ransac_PCL/pointcloud_example.pcd')
     viewer_pointcloud(pointcloud)
     ransac_pointcloud, plane_model = random_sampling_consensus(pointcloud, 100, 0.2)
     viewer_original_vs_ransac_pointcloud_vs_plane(ransac_pointcloud, pointcloud, plane_model)
