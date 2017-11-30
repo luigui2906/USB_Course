@@ -39,14 +39,10 @@ def viewer_original_vs_ransac_pointcloud_vs_plane(ransac_pcl, original_pcl, plan
     x, y = np.ogrid[-sensor_range:sensor_range:1, -sensor_range:sensor_range:1]
     mlab.points3d(original_pcl[:, 0], original_pcl[:, 1], original_pcl[:, 2], color=(0, 0, 0), mode='point')
     mlab.points3d(ransac_pcl[:, 0], ransac_pcl[:, 1], ransac_pcl[:, 2], color=(1, 0, 0), mode='point')
-    mlab.surf(x, y, plane_function(plane_model[0], plane_model[1], plane_model[2], plane_model[3], x, y),
+    mlab.surf(x, y, (-plane_model[3] - (plane_model[0]*x) - (plane_model[1]*y)) / plane_model[2],
               color=(0.8, 0.8, 1), opacity=0.3)
     mlab.show()
     return
-
-
-def plane_function(ransac_a, ransac_b, ransac_c, ransac_d, x, y):
-    return (-ransac_d - (ransac_a*x) - (ransac_b*y)) / ransac_c
 
 
 # --------------------------------------------------------------------------------------------------------------------
