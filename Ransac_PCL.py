@@ -96,7 +96,7 @@ def random_sampling_consensus(pointcloud, numb_iterations, threshold):
 
 
 def main():
-    input_path = # 'D:/Documents/PycharmProjects/Ransac_PCL/pointcloud_example.pcd'
+    input_path = 'C:/Users/lroldaoj/Documents/PycharmProjects/Ransac_PCL/pointcloud_example.pcd'
     pointcloud = read_pcd_file(input_path)
     viewer_pointcloud(pointcloud)
     ransac_pointcloud, plane_model = random_sampling_consensus(pointcloud, 100, 0.2)
